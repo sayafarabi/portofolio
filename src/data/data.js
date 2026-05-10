@@ -17,7 +17,7 @@ export const personalInfo = {
   description:
     "Saya adalah mahasiswa Ilmu Komputer yang bersemangat membangun pengalaman web interaktif, modern, dan responsif. Fokus pada React, Tailwind, dan UI/UX design.",
   cvLink: "/cv.pdf", // ganti dengan link CV Anda
-  // Gunakan Picsum dengan seed 'raka' untuk foto profil (ukuran 300x300)
+  
   profileImage: "/foto farabi.JPG",
   socialLinks: [
     { name: "GitHub", icon: FiGithub, url: "https://github.com/sayafarabi" },

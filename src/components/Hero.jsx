@@ -247,12 +247,17 @@ function MagneticButton({ children, className, onClick, href, download }) {
 /* ─────────────────────────────────────────────
    COMPONENT: 3D Tilt Profile Card
 ───────────────────────────────────────────── */
+/* ─────────────────────────────────────────────
+   COMPONENT: 3D Tilt Profile Card with Enhanced Animations
+───────────────────────────────────────────── */
 function TiltCard({ src, alt }) {
   const cardRef = useRef(null);
   const rotX = useMotionValue(0);
   const rotY = useMotionValue(0);
   const sRotX = useSpring(rotX, { stiffness: 150, damping: 20 });
   const sRotY = useSpring(rotY, { stiffness: 150, damping: 20 });
+  const [isHovered, setIsHovered] = useState(false);
+  const glowOpacity = useMotionValue(0.3);
 
   const handleMove = (e) => {
     const el = cardRef.current;
@@ -266,22 +271,49 @@ function TiltCard({ src, alt }) {
   const handleLeave = () => {
     rotX.set(0);
     rotY.set(0);
+    setIsHovered(false);
   };
+  const handleEnter = () => {
+    setIsHovered(true);
+  };
+
+  // Spring untuk glow effect
+  const springGlow = useSpring(glowOpacity, { stiffness: 200, damping: 20 });
+
+  useEffect(() => {
+    if (isHovered) {
+      glowOpacity.set(0.8);
+    } else {
+      glowOpacity.set(0.3);
+    }
+  }, [isHovered, glowOpacity]);
 
   return (
     <motion.div
       ref={cardRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
+      onMouseEnter={handleEnter}
       style={{
         rotateX: sRotX,
         rotateY: sRotY,
         transformStyle: "preserve-3d",
         perspective: 800,
       }}
-      className="relative w-44 h-44 md:w-52 md:h-52 cursor-pointer"
+      className="relative w-44 h-44 md:w-52 md:h-52 cursor-pointer group"
+      animate={{ scale: isHovered ? 1.05 : 1 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      {/* Glow ring outer */}
+      {/* Outer glow yang berdenyut */}
+      <motion.div
+        className="absolute inset-0 rounded-full blur-xl"
+        style={{
+          background: "radial-gradient(circle, rgba(0,240,255,0.6) 0%, rgba(0,102,255,0) 80%)",
+          opacity: springGlow,
+        }}
+      />
+
+      {/* Glow ring outer (berputar) */}
       <motion.div
         className="absolute inset-0 rounded-full"
         style={{
@@ -290,26 +322,57 @@ function TiltCard({ src, alt }) {
           borderRadius: "50%",
         }}
         animate={{ rotate: 360 }}
-        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: isHovered ? 3 : 6, repeat: Infinity, ease: "linear" }}
       />
+
       {/* Inner content */}
       <div
         className="absolute inset-[3px] rounded-full overflow-hidden"
         style={{ transform: "translateZ(20px)" }}
       >
         <img src={src} alt={alt} className="w-full h-full object-cover" />
-        {/* Shimmer overlay */}
+        
+        {/* Shimmer overlay (animasi berjalan) */}
         <motion.div
           className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(0,240,255,0.08) 100%)",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(0,240,255,0.08) 100%)",
           }}
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
+
+        {/* Lens flare effect saat hover */}
+        {isHovered && (
+          <motion.div
+            className="absolute top-0 left-0 w-full h-full rounded-full pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.4 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, transparent 70%)",
+            }}
+          />
+        )}
+
+        {/* Efek scan line vertikal yang bergerak saat hover */}
+        {isHovered && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            initial={{ x: "-100%" }}
+            animate={{ x: "200%" }}
+            transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 1 }}
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(0,240,255,0.3), transparent)",
+              width: "50%",
+              height: "100%",
+              transform: "skewX(-20deg)",
+            }}
+          />
+        )}
       </div>
-      {/* Floating status */}
+
+      {/* Floating status (tetap ada) */}
       <motion.div
         className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-mono tracking-widest text-green-300 border border-green-400/40 bg-black/60 backdrop-blur-md"
         style={{ transform: "translateZ(30px)" }}
@@ -318,10 +381,20 @@ function TiltCard({ src, alt }) {
       >
         ● AVAILABLE
       </motion.div>
+
+      {/* Tooltip yang muncul saat hover (opsional) */}
+      <motion.div
+        className="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 rounded-md bg-black/80 backdrop-blur-sm text-[10px] font-mono text-[#00f0ff] border border-[#00f0ff]/40 whitespace-nowrap pointer-events-none"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
+        transition={{ duration: 0.2 }}
+        style={{ transform: "translateZ(40px)" }}
+      >
+        ✨ {alt} ✨
+      </motion.div>
     </motion.div>
   );
 }
-
 /* ─────────────────────────────────────────────
    COMPONENT: Glitch Text
 ───────────────────────────────────────────── */
@@ -601,10 +674,13 @@ const Hero = () => {
     "React Developer",
     "CS Student",
   ]);
-  const scrambledName = useScramble(personalInfo.name, {
-    duration: 1600,
-    delay: 500,
-  });
+
+// fitur di nonaktifkan 
+
+  // const scrambledName = useScramble(personalInfo.name, {
+  //   duration: 160,
+  //   delay: 50,
+  // });
 
   const stats = [
     { label: "Pengalaman", value: "2", suffix: "tahun", delay: 800 },
@@ -658,7 +734,7 @@ const Hero = () => {
                 </span>
               </motion.div>
 
-              {/* Name */}
+              {/* Name Rafi Achmad Farabi */}
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -668,10 +744,9 @@ const Hero = () => {
                   Halo, Saya
                 </p>
                 <h1 className="text-5xl md:text-7xl font-black leading-none tracking-tight mb-2">
-                  <GlitchText
-                    text={scrambledName}
-                    className="glitch-text bg-gradient-to-r from-white via-white to-[#00f0ff] bg-clip-text text-transparent"
-                  />
+                  <span className="bg-gradient-to-r from-white via-white to-[#00f0ff] bg-clip-text text-transparent">
+                    {personalInfo.name}
+                  </span>
                 </h1>
               </motion.div>
 
@@ -817,7 +892,7 @@ const Hero = () => {
                   <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
                   <div className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
                   <span className="ml-2 text-[10px] font-mono text-gray-600">
-                    profile.json
+                    profile.html
                   </span>
                 </div>
                 {/* Terminal body */}
