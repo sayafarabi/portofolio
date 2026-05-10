@@ -136,7 +136,7 @@ export const projects = [
 
 export const experienceTimeline = [
   {
-    year: "2022",
+    year: "2023",
     title: "Mulai Belajar HTML & CSS",
     description:
       "Memahami dasar web development, membuat halaman statis, dan mendalami Flexbox serta Grid.",
@@ -148,25 +148,25 @@ export const experienceTimeline = [
       "Menguasai DOM manipulation, event handling, dan asynchronous programming.",
   },
   {
-    year: "2023",
+    year: "2024",
     title: "Project Pertama",
     description:
       "Membuat website portofolio pribadi dan aplikasi to-do list sebagai latihan.",
   },
   {
-    year: "2024",
+    year: "2025",
     title: "Mendalami React & Ekosistemnya",
     description:
       "Belajar React, state management, routing, dan integrasi API. Membangun beberapa proyek frontend.",
   },
   {
-    year: "2024",
+    year: "2026",
     title: "Membangun Portfolio Modern",
     description:
       "Merancang portofolio profesional dengan React, Tailwind, dan animasi Framer Motion.",
   },
   {
-    year: "2025",
+    year: "2026",
     title: "Proyek Kuliah & Kolaborasi",
     description:
       "Mengerjakan proyek tim menggunakan Git, mengimplementasikan UI/UX design, dan belajar Node.js.",

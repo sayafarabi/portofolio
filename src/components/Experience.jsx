@@ -405,9 +405,9 @@ function ExperienceCard({ item, index, isLeft, color, isActive, onHover }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   COMPONENT: Section Header
-───────────────────────────────────────────── */
+
+  // COMPONENT: Section Header
+  
 function SectionHeader({ inView }) {
   return (
     <div className="text-center mb-24">
