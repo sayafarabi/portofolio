@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 
 export function useDarkMode() {
   const [darkMode, setDarkMode] = useState(() => {
-    // Cek localStorage atau preferensi sistem
+    // Cek localStorage dulu
     const saved = localStorage.getItem("darkMode");
     if (saved !== null) return JSON.parse(saved);
+    // Jika tidak ada, ikuti preferensi sistem
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    const root = document.documentElement;
     if (darkMode) {
       root.classList.add("dark");
     } else {
