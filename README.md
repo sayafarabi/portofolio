@@ -1,7 +1,3 @@
-<!-- PROJECT LOGO -->
-<div align="center">
-  <img src="https://via.placeholder.com/100/00f0ff/000000?text=RAF" alt="Logo" width="100" height="100" style="border-radius: 50%; border: 2px solid #00f0ff;">
-
   # Rafi Achmad Farabi – Portfolio 2026
 
   **Frontend Developer • React • Tailwind • Framer Motion**
