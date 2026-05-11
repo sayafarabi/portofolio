@@ -672,7 +672,7 @@ const Hero = () => {
   const typedText = useTypingEffect([
     "Frontend Developer",
     "React Developer",
-    "CS Student",
+    "Computer Science Student",
   ]);
 
 // fitur di nonaktifkan 
